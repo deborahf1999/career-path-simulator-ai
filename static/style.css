@@ -1,0 +1,117 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 85%;
+    max-width: 1000px;
+    margin: 30px auto;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #0078d4;
+}
+
+h2 {
+    color: #333;
+}
+
+button {
+    background: #0078d4;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+textarea,
+select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.progress-container {
+    width: 100%;
+    background: #ddd;
+    border-radius: 20px;
+}
+
+.progress-bar {
+    background: #0078d4;
+    color: white;
+    padding: 8px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.result-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+}
+
+.skill-good {
+    color: green;
+    font-weight: bold;
+}
+
+.skill-missing {
+    color: red;
+    font-weight: bold;
+}
+
+.download-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #0078d4;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.download-btn:hover {
+    opacity: 0.9;
+}
+
+.score-bar {
+    width: 100%;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.score-fill {
+    height: 25px;
+    background: #28a745;
+}
+
+.secondary-btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}

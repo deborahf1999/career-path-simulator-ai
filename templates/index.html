@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+    <title>Career Path Simulator AI</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+
+                <h1>Career Path Simulator AI</h1>
+
+                <p>
+                    Discover your future career path and identify skill gaps.
+                </p>
+
+                <form id="careerForm" action="/analyze" method="POST">
+
+                    <label>Current Role</label>
+
+                    <br><br>
+
+                    <input
+                        type="text"
+                        name="current_role"
+                        placeholder="Associate Software Engineer"
+                        required>
+
+                    <br><br>
+
+                    <label>Your Skills</label>
+
+                    <br><br>
+
+                    <textarea
+                        name="skills"
+                        rows="6"
+                        cols="60"
+                        placeholder="Python, SQL, UiPath, APIs"
+                        required>
+                    </textarea>
+
+                    <br><br>
+
+                    <label>Target Career</label>
+
+                    <br><br>
+
+                    <select name="role">
+
+                        <option value="Cloud Engineer">
+                            Cloud Engineer
+                        </option>
+
+                        <option value="DevOps Engineer">
+                            DevOps Engineer
+                        </option>
+
+                        <option value="Data Engineer">
+                            Data Engineer
+                        </option>
+
+                    </select>
+
+                    <br><br>
+
+                    <button type="submit">
+                        Generate Career Path
+                    </button>
+
+                </form>
+
+                <div id="loading" style="display:none; margin-top:20px;">
+                    🤖 Generating your AI career roadmap...
+                </div>
+
+                <script>
+                document.getElementById("careerForm").addEventListener("submit", function() {
+                    document.getElementById("loading").style.display = "block";
+                });
+                </script>
+
+            
+
+        </div>
+
+    </div>
+</body>
+</html>

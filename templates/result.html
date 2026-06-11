@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+    <title>Career Results</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Career Path Analysis</h1>
+
+            <div class="result-card">
+
+                <h2>Target Career</h2>
+                <p>{{ role }}</p>
+
+                <h2>Match Score</h2>
+                <h3>{{ result.score }}%</h3>
+
+                <div class="score-bar">
+                    <div class="score-fill"
+                        style="width: {{ result.score }}%;">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>🏅 Career Readiness Level</h2>
+                <h3>{{ readiness }}</h3>
+
+            </div>
+
+
+            <div class="result-card">
+
+                <h2>✅ Matched Skills</h2>
+
+                <ul>
+                {% for skill in result.matched %}
+                    <li class="skill-good">{{ skill }}</li>
+                {% endfor %}
+                </ul>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>📚 Skills To Learn</h2>
+
+                <ul>
+                {% for skill in result.missing %}
+                    <li class="skill-missing">{{ skill }}</li>
+                {% endfor %}
+                </ul>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>🎯 Career Avatar</h2>
+
+                <p>{{ simulation.avatar }}</p>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>🚀 Skill Quests</h2>
+
+                <ul>
+                {% for quest in simulation.quests %}
+                    <li>{{ quest }}</li>
+                {% endfor %}
+                </ul>
+
+            </div>
+            <div class="result-card">
+
+                <h2>🔮 Future Career Simulation</h2>
+
+                <ul>
+                {% for step in simulation.future %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+                </ul>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>🤖 AI Career Coach</h2>
+
+                <div style="white-space: pre-line;">
+                    {{ ai_output }}
+                </div>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>🎤 AI Interview Preparation</h2>
+
+                <div style="white-space: pre-line;">
+                    {{ interview_questions }}
+                </div>
+
+            </div>
+
+            <div class="result-card">
+
+                <h2>📈 Career Transition Forecast</h2>
+
+                <p><strong>Success Probability:</strong> {{ success_rate }}%</p>
+
+                <p><strong>Estimated Timeline:</strong> {{ timeline }}</p>
+
+                <p><strong>Difficulty Level:</strong> {{ difficulty }}</p>
+
+            </div>
+
+            <br>
+
+            <a href="/" class="secondary-btn">
+                🔄 Try Another Career Path
+            </a>
+            <br><br>
+
+            <a href="/download" class="download-btn">
+                📄 Download Career Report
+            </a>
+
+            <br><br>
+
+        </div>
+
+    </div>
+
+    </body>
+</html>
