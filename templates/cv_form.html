@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Builder</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>📄 Resume Builder</h1>
+
+        <p>
+            Add optional information to improve your resume.
+        </p>
+
+        <form action="/generate_cv" method="POST" class="cv-form-card">
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="name">Full name</label>
+                    <input type="text" id="name" name="name" placeholder="Your full name">
+                </div>
+
+                <div class="form-field">
+                    <label for="phone">Phone number</label>
+                    <input type="text" id="phone" name="phone" placeholder="e.g. +1 555 123 4567">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com">
+                </div>
+
+                <div class="form-field">
+                    <label for="dob">Date of birth</label>
+                    <input type="date" id="dob" name="dob">
+                </div>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="current_role">Current role</label>
+                    <input type="text" id="current_role" name="current_role" placeholder="e.g. Teacher / Software Engineer">
+                </div>
+
+                <div class="form-field">
+                    <label for="target_role">Target role</label>
+                    <input type="text" id="target_role" name="target_role" placeholder="e.g. Principal / AI Engineer">
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label>Work experience</label>
+                <div class="form-grid">
+                    <input type="text" name="exp_company_0" placeholder="Company / school name">
+                    <input type="text" name="exp_role_0" placeholder="Role / position">
+                    <input type="text" name="exp_dates_0" placeholder="Month Year – Month Year">
+                </div>
+                <textarea name="exp_details_0" rows="4" placeholder="Example: Led curriculum planning, improved student outcomes, and mentored colleagues."></textarea>
+                <small class="field-hint">Use the same format as the extra experience entries below.</small>
+            </div>
+
+            <div class="form-field">
+                <label>Education</label>
+                <div class="form-grid">
+                    <input type="text" name="edu_degree_0" placeholder="Degree / program">
+                    <input type="text" name="edu_institution_0" placeholder="University / school name">
+                    <input type="text" name="edu_year_0" placeholder="Graduation year or duration">
+                </div>
+                <small class="field-hint">Include the degree program, institution, and completion year.</small>
+            </div>
+
+            <div class="form-field">
+                <label for="certifications">Certifications</label>
+                <textarea id="certifications" name="certifications" rows="3" placeholder="Example: IELTS, Google Project Management, TESOL"></textarea>
+            </div>
+
+            <div class="form-field">
+                <label for="projects">Projects / achievements</label>
+                <textarea id="projects" name="projects" rows="4" placeholder="Example: Led a school improvement project that increased student engagement by 20%"></textarea>
+            </div>
+
+            <div class="form-grid">
+                <div class="form-field">
+                    <label for="linkedin">LinkedIn / portfolio</label>
+                    <input type="text" id="linkedin" name="linkedin" placeholder="https://www.linkedin.com/in/your-profile">
+                </div>
+
+                <div class="form-field">
+                    <label for="experience_years">Years of experience</label>
+                    <input type="number" id="experience_years" name="experience_years" min="0" placeholder="e.g. 5">
+                </div>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div id="experience-list"></div>
+            <button type="button" class="secondary-btn add-section-btn" onclick="addExperienceEntry()">+ Add another work experience</button>
+
+            <div id="education-list"></div>
+            <button type="button" class="secondary-btn add-section-btn" onclick="addEducationEntry()">+ Add another education entry</button>
+
+            <button type="submit" class="generate-btn">Generate CV</button>
+
+        </form>
+
+        <a href="/back_to_simulation"
+        class="secondary-btn">
+        🔙 Back
+        </a>
+
+    </div>
+
+</div>
+
+<script>
+function addExperienceEntry() {
+  const container = document.getElementById('experience-list');
+  const index = container.children.length;
+  const block = document.createElement('div');
+  block.className = 'form-field';
+  block.innerHTML = `
+    <label>Work experience ${index + 2}</label>
+    <input type="text" name="exp_company_${index}" placeholder="Company / school name">
+    <input type="text" name="exp_role_${index}" placeholder="Role / position">
+    <input type="text" name="exp_dates_${index}" placeholder="Month Year – Month Year">
+    <textarea name="exp_details_${index}" rows="3" placeholder="Describe your responsibilities, achievements, and impact"></textarea>
+  `;
+  container.appendChild(block);
+}
+
+function addEducationEntry() {
+  const container = document.getElementById('education-list');
+  const index = container.children.length;
+  const block = document.createElement('div');
+  block.className = 'form-field';
+  block.innerHTML = `
+    <label>Education ${index + 2}</label>
+    <input type="text" name="edu_degree_${index}" placeholder="Degree / program">
+    <input type="text" name="edu_institution_${index}" placeholder="University / school name">
+    <input type="text" name="edu_year_${index}" placeholder="Graduation year or duration">
+  `;
+  container.appendChild(block);
+}
+</script>
+
+</body>
+</html>

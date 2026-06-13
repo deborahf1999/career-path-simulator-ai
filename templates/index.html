@@ -12,83 +12,76 @@
 
         <div class="card">
 
+            <h1>🚀 Career Quest AI</h1>
 
-                <h1>Career Path Simulator AI</h1>
+            <p>
+                Explore your future career, unlock skill quests,
+                battle skill gaps, and simulate your future self.
+            </p>
 
-                <p>
-                    Discover your future career path and identify skill gaps.
-                </p>
+            <form id="careerForm" action="/analyze" method="POST">
 
-                <form id="careerForm" action="/analyze" method="POST">
+                <label>Current Role</label>
 
-                    <label>Current Role</label>
+                <br><br>
 
-                    <br><br>
+                <input
+                    type="text"
+                    name="current_role"
+                    placeholder="Merchandiser, UX Designer, Pilot, etc..."
+                    required>
 
-                    <input
-                        type="text"
-                        name="current_role"
-                        placeholder="Associate Software Engineer"
-                        required>
+                <br><br>
 
-                    <br><br>
+                <label>Your Skills</label>
 
-                    <label>Your Skills</label>
+                <br><br>
 
-                    <br><br>
+                <textarea
+                    name="skills"
+                    rows="6"
+                    cols="60"
+                    placeholder="Python, SQL, UiPath, APIs"
+                    required>
+                </textarea>
 
-                    <textarea
-                        name="skills"
-                        rows="6"
-                        cols="60"
-                        placeholder="Python, SQL, UiPath, APIs"
-                        required>
-                    </textarea>
+                <br><br>
 
-                    <br><br>
+                <label>Dream Career</label>
 
-                    <label>Target Career</label>
+                <br><br>
 
-                    <br><br>
+                <input
+                    type="text"
+                    name="role"
+                    placeholder="Cloud Engineer, UX Designer, Product Manager..."
+                    required>
 
-                    <select name="role">
+                <br><br>
 
-                        <option value="Cloud Engineer">
-                            Cloud Engineer
-                        </option>
+                <button type="submit">
+                    Generate Career Path
+                </button>
 
-                        <option value="DevOps Engineer">
-                            DevOps Engineer
-                        </option>
+            </form>
 
-                        <option value="Data Engineer">
-                            Data Engineer
-                        </option>
-
-                    </select>
-
-                    <br><br>
-
-                    <button type="submit">
-                        Generate Career Path
-                    </button>
-
-                </form>
-
-                <div id="loading" style="display:none; margin-top:20px;">
-                    🤖 Generating your AI career roadmap...
+            <div id="loading" class="loading-screen">
+                <div class="loader-box">
+                    <h2>🚀 Simulating Your Future...</h2>
+                    <p>Analyzing alternate career timelines</p>
+                    <div class="spinner"></div>
                 </div>
+            </div>
 
-                <script>
-                document.getElementById("careerForm").addEventListener("submit", function() {
-                    document.getElementById("loading").style.display = "block";
-                });
-                </script>
-
-            
+            <script>
+            document.getElementById("careerForm").addEventListener("submit", function() {
+                document.getElementById("loading").style.display = "flex";
+            });
+            </script>
 
         </div>
 
     </div>
+
 </body>
 </html>

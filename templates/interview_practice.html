@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview Practice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <h1>🎤 Interview Arena</h1>
+        <p>Answer the questions like it is a real interview. You can stop anytime.</p>
+
+        <div class="result-card">
+            <h2>📈 Career Momentum</h2>
+            <p>Momentum: <strong>{{ momentum }}</strong></p>
+            <p>Level: <strong>{{ level }}</strong></p>
+        </div>
+
+        <div class="result-card">
+            <h2>🎯 Your Interview Mode</h2>
+            <p>Role: <strong>{{ role }}</strong></p>
+            <p>Tip: Speak clearly, structure your answers, and keep your examples specific.</p>
+        </div>
+
+        <div class="result-card">
+            <h2>❓ Interview Questions</h2>
+            <div id="questionBox" class="chat-box"></div>
+        </div>
+
+        <div class="result-card">
+            <button id="startBtn" class="primary-btn">Start Interview</button>
+            <button id="stopBtn" class="secondary-btn">Stop Interview</button>
+        </div>
+
+        <div class="cv-actions">
+            <a href="/back_to_simulation" class="secondary-btn">🔙 Back</a>
+            <a href="/cv_form" class="primary-btn">📄 Build CV</a>
+        </div>
+    </div>
+</div>
+
+<script>
+const rawQuestions = {{ questions|tojson }};
+const questionBox = document.getElementById('questionBox');
+const startBtn = document.getElementById('startBtn');
+const stopBtn = document.getElementById('stopBtn');
+let index = 0;
+let timer = null;
+let running = false;
+
+function normalizeQuestions(value) {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (typeof value === 'string') {
+    return value
+      .split(/\n+/)
+      .map(item => item.replace(/^\s*[-*\d\.]+\s*/, '').replace(/^\s*•\s*/, '').trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
+const questions = normalizeQuestions(rawQuestions);
+
+function renderQuestion() {
+  questionBox.innerHTML = '';
+  if (!questions.length) {
+    questionBox.innerHTML = '<p>No interview questions are available right now.</p>';
+    return;
+  }
+  const item = document.createElement('div');
+  item.className = 'chat-block ai-msg';
+  item.innerHTML = '<p><strong>Q' + (index + 1) + ':</strong> ' + questions[index] + '</p>';
+  questionBox.appendChild(item);
+}
+
+function nextQuestion() {
+  if (!running) return;
+  if (index >= questions.length - 1) {
+    running = false;
+    questionBox.innerHTML += '<p class="chat-block ai-msg"><strong>Interview complete.</strong> Great job — you finished the practice round.</p>';
+    fetch('/api/interview_complete', {method: 'POST'}).then(r => r.json()).then(data => {
+      questionBox.innerHTML += '<p class="chat-block ai-msg">Momentum +40. Current momentum: ' + data.momentum + '</p>';
+    });
+    return;
+  }
+  index += 1;
+  renderQuestion();
+}
+
+function startInterview() {
+  if (running) return;
+  running = true;
+  index = 0;
+  renderQuestion();
+  if (timer) clearInterval(timer);
+  timer = setInterval(nextQuestion, 15000);
+}
+
+startBtn.addEventListener('click', startInterview);
+
+if (questions.length) {
+  startInterview();
+}
+
+stopBtn.addEventListener('click', function () {
+  running = false;
+  if (timer) clearInterval(timer);
+  questionBox.innerHTML += '<p class="chat-block ai-msg">Interview paused. You can restart anytime.</p>';
+});
+</script>
+</body>
+</html>

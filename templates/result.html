@@ -3,144 +3,209 @@
 <head>
     <link rel="stylesheet"
       href="{{ url_for('static', filename='style.css') }}">
-    <title>Career Results</title>
+    <title>Future Self Simulation</title>
 </head>
 
 <body>
 
-    <div class="container">
+<div id="introScreen" class="intro-screen">
+    <div class="intro-content">
+        <h1>🚀 Initializing Future Simulation</h1>
+        <p>Connecting to alternate career timelines...</p>
+        <div class="loader"></div>
+    </div>
+</div>
 
-        <div class="card">
+<div class="container">
 
-            <h1>Career Path Analysis</h1>
+    <div class="card">
 
-            <div class="result-card">
+        <!-- HERO TITLE -->
+        <h1>🚀 Future Self Simulator</h1>
 
-                <h2>Target Career</h2>
-                <p>{{ role }}</p>
+        <div class="result-card">
+            <h2>📊 Career Momentum</h2>
 
-                <h2>Match Score</h2>
-                <h3>{{ result.score }}%</h3>
+            <p>Momentum Score: {{ session.get('momentum', 0) }}</p>
 
-                <div class="score-bar">
-                    <div class="score-fill"
-                        style="width: {{ result.score }}%;">
-                    </div>
-                </div>
+            <p>Current Level:
+                {{ level if level else "Level 1 - Explorer" }}
+            </p>
+        </div>
 
-            </div>
+        <div class="result-card">
+            <h2>🧙 Your Future Identity</h2>
+            <h1>{{ ai.hero_title }}</h1>
+        </div>
 
-            <div class="result-card">
+        <!-- POWER LEVEL -->
+        <div class="result-card">
+            <h2>⚡ Power Level</h2>
+            <h1>{{ ai.power_level }}/100</h1>
+        </div>
 
-                <h2>🏅 Career Readiness Level</h2>
-                <h3>{{ readiness }}</h3>
+        <div class="result-card destiny-card">
 
-            </div>
+            <h2>🔮 Career Destiny Card</h2>
 
+            <h1>{{ ai.hero_title }}</h1>
 
-            <div class="result-card">
+            <h3>{{ ai.rank }}</h3>
 
-                <h2>✅ Matched Skills</h2>
+            <p>
+                ⚡ Power Level:
+                {{ ai.power_level }}/100
+            </p>
 
-                <ul>
-                {% for skill in result.matched %}
-                    <li class="skill-good">{{ skill }}</li>
-                {% endfor %}
-                </ul>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>📚 Skills To Learn</h2>
-
-                <ul>
-                {% for skill in result.missing %}
-                    <li class="skill-missing">{{ skill }}</li>
-                {% endfor %}
-                </ul>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>🎯 Career Avatar</h2>
-
-                <p>{{ simulation.avatar }}</p>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>🚀 Skill Quests</h2>
-
-                <ul>
-                {% for quest in simulation.quests %}
-                    <li>{{ quest }}</li>
-                {% endfor %}
-                </ul>
-
-            </div>
-            <div class="result-card">
-
-                <h2>🔮 Future Career Simulation</h2>
-
-                <ul>
-                {% for step in simulation.future %}
-                    <li>{{ step }}</li>
-                {% endfor %}
-                </ul>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>🤖 AI Career Coach</h2>
-
-                <div style="white-space: pre-line;">
-                    {{ ai_output }}
-                </div>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>🎤 AI Interview Preparation</h2>
-
-                <div style="white-space: pre-line;">
-                    {{ interview_questions }}
-                </div>
-
-            </div>
-
-            <div class="result-card">
-
-                <h2>📈 Career Transition Forecast</h2>
-
-                <p><strong>Success Probability:</strong> {{ success_rate }}%</p>
-
-                <p><strong>Estimated Timeline:</strong> {{ timeline }}</p>
-
-                <p><strong>Difficulty Level:</strong> {{ difficulty }}</p>
-
-            </div>
-
-            <br>
-
-            <a href="/" class="secondary-btn">
-                🔄 Try Another Career Path
-            </a>
-            <br><br>
-
-            <a href="/download" class="download-btn">
-                📄 Download Career Report
-            </a>
-
-            <br><br>
+            <p>
+                🎯 Destination:
+                {{ role }}
+            </p>
 
         </div>
 
+        <!-- RANK -->
+        <div class="result-card">
+            <h2>🏅 Rank</h2>
+            <h3>{{ ai.rank }}</h3>
+        </div>
+
+        <!-- CAREER TIMELINE -->
+        <div class="result-card">
+            <h2>🗺️ Career Timeline Simulation</h2>
+
+            <p>📍 Today: {{ ai.timeline.today }}</p>
+            <p>📈 3 Months: {{ ai.timeline["3_months"] }}</p>
+            <p>🚀 6 Months: {{ ai.timeline["6_months"] }}</p>
+            <p>🏆 12 Months: {{ ai.timeline["12_months"] }}</p>
+        </div>
+
+        <!-- ALTERNATE FUTURES -->
+        <div class="result-card">
+            <h2>🌍 Alternate Futures</h2>
+
+            <h3>🟢 Safe Path</h3>
+            <p>{{ ai.future_paths.safe_path or "..." }}</p>
+
+            <h3>🔵 Growth Path</h3>
+            <p>{{ ai.future_paths.growth_path or "..." }}</p>
+
+            <h3>🔴 Bold Path</h3>
+            <p>{{ ai.future_paths.bold_path or "..." }}</p>
+        </div>
+
+        <!-- SKILL QUESTS -->
+        <div class="result-card">
+            <h2>⚔️ Skill Quests</h2>
+            <ul>
+                {% for q in ai.skill_quests or [] %}
+                    <li>🎯 {{ q }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- BOSS BATTLES -->
+        <div class="result-card">
+            <h2>👹 Boss Battles</h2>
+            <ul>
+                {% for b in ai.boss_battles %}
+                    <li>🔥 {{ b }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- FUTURE NEWS -->
+        <div class="result-card">
+            <h2>📰 Future News Headline</h2>
+            <p>{{ ai.future_news_headline }}</p>
+        </div>
+
+    
+        <!-- FUTURE SELF MESSAGE -->
+        <div class="result-card">
+            <h2>💬 Message From Your Future Self</h2>
+
+            <p id="futureText">
+                {{ ai.future_self_message }}
+            </p>
+        </div>
+
+        <!-- MOTIVATION -->
+        <div class="result-card">
+            <h2>✨ Final Motivation</h2>
+            <p>{{ ai.motivational_quote }}</p>
+        </div>
+
+        <div class="result-card">
+
+        <a href="/future_chat_page" class="primary-btn">
+            💬 Talk to Future You
+        </a>
+
+
+        </div>
+
+        <!-- BACK BUTTON -->
+        <br>
+
+        <a href="/" class="secondary-btn">
+            🔄 Try Another Future
+        </a>
+
+        <br><br>
+
+        <a href="/cv_form" class="primary-btn">
+            📄 Build My CV
+        </a>
+
+        <a href="/interview_practice" class="primary-btn">
+            🎤 Practice Interview
+        </a>
+
     </div>
 
-    </body>
+</div>
+
+<!-- TYPEWRITER EFFECT -->
+<script>
+const textElement = document.getElementById("futureText");
+
+if (textElement) {
+
+    const content = textElement.textContent.trim();
+
+    textElement.textContent = "";
+
+    let index = 0;
+
+    function typeWriter() {
+
+        if (index < content.length) {
+
+            textElement.textContent += content[index];
+
+            index++;
+
+            setTimeout(typeWriter, 25);
+        }
+    }
+
+    typeWriter();
+}
+</script>
+
+<script>
+window.onload = function () {
+    setTimeout(() => {
+        const intro = document.getElementById("introScreen");
+        if (intro) {
+            intro.style.opacity = "0";
+            intro.style.transition = "1s";
+            setTimeout(() => intro.remove(), 1000);
+        }
+    }, 1500); // show for 1.5 sec
+};
+</script>
+
+</body>
 </html>

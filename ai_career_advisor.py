@@ -13,23 +13,54 @@ client = AzureOpenAI(
 def generate_career_advice(current_role, skills, target_role):
 
     prompt = f"""
+    You are a cinematic career simulation AI.
+
+    Return ONLY valid JSON. No markdown.
+
+    CRITICAL FORMATTING RULES:
+    - Always use proper English sentences
+    - Always include spaces between words
+    - Never merge words together
+    - Use readable human-style writing
+    - Each sentence must be clear and spaced properly
+
     Current Role: {current_role}
+    Skills: {skills}
+    Target Role: {target_role}
 
-    Current Skills:
-    {skills}
+    Return EXACT JSON:
 
-    Target Role:
-    {target_role}
+    {{
+    "hero_title": "",
+    "power_level": 0,
+    "rank": "",
+    
+    "career_readiness_score": 0,
+    "career_probability": "",
 
-    Generate:
+    "transferable_skills": [],
+    "skill_gaps": [],
+    "recommended_learning_path": [],
 
-    1. Career Summary
-    2. Skills to Learn
-    3. Recommended Certifications
-    4. 6 Month Learning Roadmap
-    5. Career Advice
+    "timeline": {{
+        "today": "",
+        "3_months": "",
+        "6_months": "",
+        "12_months": ""
+    }},
 
-    Keep it concise and practical.
+    "future_paths": {{
+        "safe_path": "",
+        "growth_path": "",
+        "bold_path": ""
+    }},
+
+    "skill_quests": [],
+    "boss_battles": [],
+    "future_news_headline": "",
+    "future_self_message": "",
+    "motivational_quote": ""
+    }}
     """
 
     response = client.chat.completions.create(
@@ -40,7 +71,8 @@ def generate_career_advice(current_role, skills, target_role):
                 "content": prompt
             }
         ],
-        max_tokens=500
+        max_tokens=800
     )
+
 
     return response.choices[0].message.content

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Builder</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static',
+          filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+    <div class="cv-header">
+
+        <h1>📄 AI Resume Builder</h1>
+
+        <p>
+            Professionally generated resume for your
+            future career path
+        </p>
+
+    </div>
+
+    <div class="result-card">
+
+        <h2>📈 Career Progress</h2>
+
+        <p>
+            Momentum:
+            <strong>{{ momentum }}</strong>
+        </p>
+
+        <p>
+            Level:
+            <strong>{{ level }}</strong>
+        </p>
+
+    </div>
+
+    <div class="cv-section">
+
+        <h2>📝 Professional Summary</h2>
+
+        <p>{{ cv.summary }}</p>
+
+    </div>
+
+    <div class="cv-section">
+
+        <h2>💡 Core Skills</h2>
+
+        <div class="skills-grid">
+
+            {% for skill in cv.skills %}
+                <span class="skill-pill">
+                    {{ skill }}
+                </span>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <div class="cv-section">
+
+        <h2>💼 Experience Highlights</h2>
+
+        {% for exp in cv.experience %}
+
+        <div class="experience-card">
+
+            <h3>{{ exp.title or 'Experience' }}</h3>
+
+            <p>
+                <strong>{{ exp.company or 'Company Details' }}</strong>
+            </p>
+
+            <p>{{ exp.duration or 'Duration not specified' }}</p>
+
+            {% if exp.responsibilities %}
+            <ul>
+                {% for r in exp.responsibilities %}
+                    <li>{{ r }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% if cv.projects %}
+
+    <div class="cv-section">
+
+        <h2>🚀 Projects</h2>
+
+        <ul>
+            {% for item in cv.projects %}
+                <li>
+                    <strong>{{ item.name }}</strong>
+                    {% if item.description %}
+                    <br>{{ item.description }}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    {% endif %}
+    
+
+    {% if cv.certifications %}
+
+    <div class="cv-section">
+
+        <h2>🏆 Certifications</h2>
+
+        <ul>
+            {% for item in cv.certifications %}
+                <li>{{ item.name if item is mapping else item }}</li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    {% endif %}
+
+
+    {% if cv.education %}
+
+    <div class="cv-section">
+
+        <h2>🎓 Education</h2>
+
+        {% for edu in cv.education %}
+
+            <div class="experience-card">
+
+                <h3>{{ edu.degree or 'Education' }}</h3>
+
+                <p>{{ edu.institution or 'Institution not specified' }}</p>
+
+                <p>{{ edu.year_completed or '' }}</p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+    <a href="/download_cv"
+    class="download-btn">
+    📄 Download PDF
+    </a>
+
+    <div class="cv-actions">
+
+        <a href="/back_to_simulation"
+           class="secondary-btn">
+
+           🔙 Back to Simulation
+
+        </a>
+
+        <a href="/future_chat_page"
+           class="primary-btn">
+
+           💬 Ask Future You
+
+        </a>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

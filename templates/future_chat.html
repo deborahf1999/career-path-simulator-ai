@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="card">
+
+<h1>💬 Talk to Your Future Self</h1>
+
+<div class="result-card destiny-card">
+    <h3>📈 Your Progress</h3>
+    <p>Momentum: {{ momentum }}</p>
+    <p>Level: {{ level }}</p>
+</div>
+
+<!-- CHAT HISTORY -->
+<div class="chat-box">
+
+    {% for c in chat_history %}
+
+        <div class="chat-block user-msg">
+            <small>🧑 You</small>
+            <p>{{ c.q }}</p>
+        </div>
+
+        <div class="chat-block ai-msg">
+            <small>🤖 Future You</small>
+            <p>{{ c.a }}</p>
+        </div>
+
+    {% endfor %}
+
+</div>
+
+<!-- INPUT (KEEP CHAT GOING) -->
+<div id="chatBox" class="chat-box"></div>
+
+<textarea id="questionBox" placeholder="Ask your future self..."></textarea>
+
+<button onclick="sendMessage()" class="primary-btn">
+    Send 🚀
+</button>
+
+<div id="chatBox"></div>
+
+<br>
+
+<!-- NAVIGATION -->
+<a href="/back_to_simulation" class="secondary-btn">
+    🔙 Back to Simulation
+</a>
+
+</div>
+
+</div>
+
+<script>
+
+async function sendMessage() {
+
+    const question = document.getElementById("questionBox").value;
+    const role = "{{ role }}";
+
+    if (!question.trim()) return;
+
+    const chatBox = document.getElementById("chatBox");
+
+    // user message
+    chatBox.innerHTML += `
+        <div class="chat-block user-msg">
+            🧑 You: ${question}
+        </div>
+    `;
+
+    document.getElementById("questionBox").value = "";
+
+    // typing indicator
+    chatBox.innerHTML += `
+        <div class="chat-block ai-msg" id="typing">
+            🤖 Future You is thinking...
+        </div>
+    `;
+
+    const res = await fetch("/api/future_chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, question })
+    });
+
+    const data = await res.json();
+
+    document.getElementById("typing").remove();
+
+    chatBox.innerHTML += `
+        <div class="chat-block ai-msg">
+            🤖 Future You: ${data.answer}
+        </div>
+    `;
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+// ENTER key support
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        if (document.activeElement.tagName === "TEXTAREA") {
+            e.preventDefault();
+            sendMessage();
+        }
+    }
+});
+
+</script>
+</body>
+</html>

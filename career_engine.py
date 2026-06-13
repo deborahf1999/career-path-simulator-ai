@@ -1,66 +1,48 @@
-from skill_data import CAREERS
+from openai import AzureOpenAI
+import os
+import json
+from dotenv import load_dotenv
 
-def generate_badges(score):
+load_dotenv()
 
-    badges = []
 
-    if score >= 20:
-        badges.append("🏅 Career Explorer")
-
-    if score >= 40:
-        badges.append("🥈 Skill Builder")
-
-    if score >= 60:
-        badges.append("🥇 Career Specialist")
-
-    if score >= 80:
-        badges.append("💎 Future Expert")
-
-    return badges
+client = AzureOpenAI(
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    api_version="2024-02-01",
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT")
+)
 
 def analyze(user_skills, target_role):
 
-    required_skills = CAREERS[target_role]["skills"]
+    prompt = f"""
+    Evaluate this career transition.
 
-    matched = []
+    Skills:
+    {', '.join(user_skills)}
 
-    for skill in required_skills:
-        if skill.lower() in [s.strip().lower() for s in user_skills]:
-            matched.append(skill)
+    Target Role:
+    {target_role}
 
-    missing = [
-        skill
-        for skill in required_skills
-        if skill not in matched
-    ]
+    Return JSON:
 
-    score = int(
-        len(matched) /
-        len(required_skills)
-        * 100
+    {{
+      "score": 0,
+      "level": "",
+      "matched": [],
+      "missing": [],
+      "badges": []
+    }}
+    """
+
+    response = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[{
+            "role": "user",
+            "content": prompt
+        }],
+        response_format={"type": "json_object"}
     )
 
-    if score <= 20:
-        level = "Level 1 - Explorer"
-
-    elif score <= 40:
-        level = "Level 2 - Builder"
-
-    elif score <= 60:
-        level = "Level 3 - Specialist"
-
-    elif score <= 80:
-        level = "Level 4 - Professional"
-
-    else:
-        level = "Level 5 - Expert"
-
-    badges = generate_badges(score)
-
-    return {
-        "score": score,
-        "matched": matched,
-        "missing": missing,
-        "level": level,
-        "badges": badges
-    }
+    return json.loads(
+        response.choices[0].message.content
+    )
