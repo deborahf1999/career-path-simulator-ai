@@ -2,6 +2,45 @@ import unittest
 from unittest.mock import patch
 
 import cv_generator
+import interview_coach
+
+
+class InterviewQuestionParsingTests(unittest.TestCase):
+    def test_generate_interview_questions_extracts_real_questions(self):
+        fake_text = """
+Certainly! Here are the interview preparation questions for an AI Engineer:
+
+1. Technical Questions
+1. How do you design a scalable ML pipeline?
+2. What is the difference between supervised and unsupervised learning?
+
+2. Behavioral Questions
+3. Tell me about a time you collaborated across teams.
+"""
+
+        class FakeMessage:
+            content = fake_text
+
+        class FakeChoice:
+            message = FakeMessage()
+
+        class FakeResponse:
+            choices = [FakeChoice()]
+
+        class FakeCompletions:
+            def create(self, **kwargs):
+                return FakeResponse()
+
+        class FakeClient:
+            chat = type("Chat", (), {"completions": FakeCompletions()})()
+
+        with patch.object(interview_coach, "client", FakeClient()):
+            questions = interview_coach.generate_interview_questions("AI Engineer")
+
+        self.assertTrue(questions)
+        self.assertIn("How do you design a scalable ML pipeline?", questions)
+        self.assertNotIn("Certainly! Here are", questions)
+        self.assertNotIn("Technical Questions", questions)
 
 
 class GenerateCvFallbackTests(unittest.TestCase):

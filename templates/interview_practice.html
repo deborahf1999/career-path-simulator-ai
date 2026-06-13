@@ -25,6 +25,13 @@
         <div class="result-card">
             <h2>❓ Interview Questions</h2>
             <div id="questionBox" class="chat-box"></div>
+            <label for="answerBox" style="display:block; margin-top: 12px; font-weight: 600;">Your answer</label>
+            <textarea id="answerBox" rows="5" placeholder="Type your answer as if you were in a real interview..." style="width: 100%; box-sizing: border-box; margin-top: 8px;"></textarea>
+            <div class="cv-actions" style="margin-top: 10px;">
+                <button id="submitBtn" class="primary-btn" type="button">Submit Answer</button>
+                <button id="nextBtn" class="secondary-btn" type="button">Next Question</button>
+            </div>
+            <div id="feedbackBox" class="chat-box" style="margin-top: 12px;"></div>
         </div>
 
         <div class="result-card">
@@ -42,10 +49,13 @@
 <script>
 const rawQuestions = {{ questions|tojson }};
 const questionBox = document.getElementById('questionBox');
+const answerBox = document.getElementById('answerBox');
+const feedbackBox = document.getElementById('feedbackBox');
 const startBtn = document.getElementById('startBtn');
 const stopBtn = document.getElementById('stopBtn');
+const submitBtn = document.getElementById('submitBtn');
+const nextBtn = document.getElementById('nextBtn');
 let index = 0;
-let timer = null;
 let running = false;
 
 function normalizeQuestions(value) {
@@ -63,6 +73,8 @@ const questions = normalizeQuestions(rawQuestions);
 
 function renderQuestion() {
   questionBox.innerHTML = '';
+  feedbackBox.innerHTML = '';
+  answerBox.value = '';
   if (!questions.length) {
     questionBox.innerHTML = '<p>No interview questions are available right now.</p>';
     return;
@@ -73,13 +85,35 @@ function renderQuestion() {
   questionBox.appendChild(item);
 }
 
-function nextQuestion() {
+function giveFeedback(answer) {
+  const text = (answer || '').trim().toLowerCase();
+  let score = 4;
+  if (text.length >= 80) score += 2;
+  if (text.length >= 160) score += 1;
+  if (/\b(problem|project|result|improved|team|because|example|learned|impact)\b/.test(text)) score += 1;
+  if (/\b(i|we)\b/.test(text)) score += 1;
+  if (score > 10) score = 10;
+
+  let feedback = '';
+  if (score < 5) {
+    feedback = 'You are on the right track. Add a specific example, mention the result, and explain what you learned.';
+  } else if (score < 8) {
+    feedback = 'Good answer. It would sound stronger with a clearer example, a measurable result, and a short closing statement.';
+  } else {
+    feedback = 'Strong interview response. You explained your point well and showed real depth. Keep using STAR-style answers (Situation, Task, Action, Result).';
+  }
+
+  feedbackBox.innerHTML = '<div class="chat-block ai-msg"><p><strong>Coach feedback:</strong> ' + feedback + '</p>' +
+    '<p><strong>Answer quality:</strong> ' + score + '/10</p></div>';
+}
+
+function goToNextQuestion() {
   if (!running) return;
   if (index >= questions.length - 1) {
     running = false;
-    questionBox.innerHTML += '<p class="chat-block ai-msg"><strong>Interview complete.</strong> Great job — you finished the practice round.</p>';
+    feedbackBox.innerHTML = '<p class="chat-block ai-msg"><strong>Interview complete.</strong> Great job — you finished the practice round.</p>';
     fetch('/api/interview_complete', {method: 'POST'}).then(r => r.json()).then(data => {
-      questionBox.innerHTML += '<p class="chat-block ai-msg">Momentum +40. Current momentum: ' + data.momentum + '</p>';
+      feedbackBox.innerHTML += '<p class="chat-block ai-msg">Momentum +40. Current momentum: ' + data.momentum + '</p>';
     });
     return;
   }
@@ -92,8 +126,6 @@ function startInterview() {
   running = true;
   index = 0;
   renderQuestion();
-  if (timer) clearInterval(timer);
-  timer = setInterval(nextQuestion, 15000);
 }
 
 startBtn.addEventListener('click', startInterview);
@@ -102,10 +134,30 @@ if (questions.length) {
   startInterview();
 }
 
+submitBtn.addEventListener('click', function () {
+  if (!running) {
+    feedbackBox.innerHTML = '<p class="chat-block ai-msg">Press Start Interview first.</p>';
+    return;
+  }
+  const answer = answerBox.value;
+  if (!answer.trim()) {
+    feedbackBox.innerHTML = '<p class="chat-block ai-msg">Please type an answer before submitting.</p>';
+    return;
+  }
+  giveFeedback(answer);
+});
+
+nextBtn.addEventListener('click', function () {
+  if (!running) {
+    feedbackBox.innerHTML = '<p class="chat-block ai-msg">Press Start Interview first.</p>';
+    return;
+  }
+  goToNextQuestion();
+});
+
 stopBtn.addEventListener('click', function () {
   running = false;
-  if (timer) clearInterval(timer);
-  questionBox.innerHTML += '<p class="chat-block ai-msg">Interview paused. You can restart anytime.</p>';
+  feedbackBox.innerHTML = '<p class="chat-block ai-msg">Interview paused. You can restart anytime.</p>';
 });
 </script>
 </body>

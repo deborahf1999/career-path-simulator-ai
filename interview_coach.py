@@ -53,8 +53,20 @@ Format clearly.
             ]
         )
         text = getattr(response.choices[0].message, "content", "") or ""
-        lines = [re.sub(r"^\s*(?:[-*\d\.]+\s*)+", "", line).strip(" •-") for line in text.splitlines()]
-        cleaned = [line for line in lines if line]
+        lines = []
+        for raw in text.splitlines():
+            line = raw.strip()
+            line = re.sub(r"^\s*(?:[-*\d\.]+\s*)+", "", line)
+            line = line.strip(" •-")
+            if not line:
+                continue
+            if line.lower().startswith("here are") or line.lower().startswith("certainly"):
+                continue
+            if re.search(r"\b(technical|behavioral|scenario|questions)\b", line, flags=re.IGNORECASE) and len(line.split()) <= 4:
+                continue
+            lines.append(line)
+
+        cleaned = [line for line in lines if line.endswith("?") or line.endswith(".")]
         if cleaned:
             return cleaned[:10]
     except Exception:
